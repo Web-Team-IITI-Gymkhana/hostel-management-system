@@ -3,7 +3,7 @@ from django.utils.translation import gettext as _
 from .students import Student
 
 class Dues(models.Model):
-    Student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    students = models.ForeignKey(Student, on_delete=models.CASCADE)
     Remaining_Due = models.IntegerField(
         null=True,
         blank=True,)
