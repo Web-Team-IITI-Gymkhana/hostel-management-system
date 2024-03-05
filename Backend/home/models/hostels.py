@@ -22,6 +22,5 @@ class Hostel(models.Model):
         default="",
         blank=True,)
     Units = models.ManyToManyField(
-        _("Units Prensent in Hostel"),
         Unit, 
-        on_delete=models.CASCADE)
+        )

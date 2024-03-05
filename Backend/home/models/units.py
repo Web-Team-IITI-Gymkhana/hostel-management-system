@@ -15,9 +15,8 @@ class Unit(models.Model):
         max_length=50, 
         choices=FURNITURE_CHOICES, 
         blank=True)
-    Room = models.ManyToManyField(
-        Room, 
-        on_delete=models.CASCADE)
+    rooms = models.ManyToManyField(
+        Room)
 
     def __str__(self):
         return f"Unit {self.Unit_number}"

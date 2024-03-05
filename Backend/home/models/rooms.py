@@ -12,10 +12,10 @@ class Room(models.Model):
     Room_ID = models.CharField(
         _("Alphabet of room"),
         max_length=1,)
-    Student = models.ForeignKey(
-        _("Student occupying current room"),
+    students = models.ForeignKey(
         Student, 
-        on_delete=models.CASCADE,)
+        null=True,
+        on_delete=models.SET_NULL)
     furniture = models.CharField(
         _("Available furniture"),
         max_length=50, 
