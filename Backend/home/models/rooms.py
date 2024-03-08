@@ -12,7 +12,7 @@ class Room(models.Model):
     Room_ID = models.CharField(
         _("Alphabet of room"),
         max_length=1,)
-    Student = models.ForeignKey(
+    student = models.ForeignKey(
         _("Student occupying current room"),
         Student, 
         on_delete=models.CASCADE,)
