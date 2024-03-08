@@ -8,7 +8,7 @@ class StudentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class RoomSerializer(serializers.ModelSerializer):
-    Student = StudentSerializer(many = False)
+    Student = StudentSerializer(many = True ,read_only=True)
     class Meta:
         model = Room
         fields = '__all__'
