@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework import generics
-from home.models import (Student,Hostel,Unit,Room,Dues)
+from home.models import (Student,Hostel,Unit,Room,Due)
 from .serializers import *
 # Create your views here.
 
