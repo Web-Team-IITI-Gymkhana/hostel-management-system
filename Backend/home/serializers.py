@@ -1,9 +1,6 @@
 from rest_framework import serializers
 from django.db import models
-from models.hostels import Hostel
-from models.units import Unit
-from models.rooms import Room
-from models.students import Student
+from home.models import (Student,Hostel,Unit,Room,Dues)
 
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
