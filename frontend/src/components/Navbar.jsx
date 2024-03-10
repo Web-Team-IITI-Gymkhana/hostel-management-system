@@ -4,7 +4,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import '../css/Navbar.css';
 import logo from '../images/Indian_Institute_of_Technology,_Indore_Logo.png';
+import { useState } from 'react';
+
 function Navbar() {
+    const [isMenuOpen, setMenuOpen] = useState(false);
+    const toggleMenu = () => {
+        setMenuOpen(!isMenuOpen);
+        console.log("clicked")
+    };
     return (
         <>
             <div className="logo bg-white py-2 px-0 mx-md-3 mx-0 container-md">
@@ -16,39 +23,40 @@ function Navbar() {
                     </span>
                 </a>
             </div>
-
             <div className="navigation">
-            <nav className="navbar navbar-expand-lg navbar-dark text-white">
-                <div className="container-fluid">
-                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-                    <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul className="navbar-nav mb-2  h5" style={{ fontWeight: 600 }}>
-                            <li className="nav-item">
-                                <a className="nav-link"  href="/home">Home</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link" href="/rules">Rules</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link" href="/links">Forms</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link" href="/services">Additional Services</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link" href="/contact">Contact</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link" href="/accounts/login/">Login</a>
-                            </li>
+                <nav className="bg-[rgb(18, 37, 106)] w-full z-20">
+                    <div className="flex flex-wrap items-center justify-between px-5 mx-auto">
+                    <div className="flex py-2 md:order-2 space-x-3 md:space-x-0 w-screen justify-between md:w-max">
+                        <button onClick={toggleMenu} data-collapse-toggle="navbar-sticky" type="button" className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-white rounded-lg md:hidden hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-800" aria-controls="navbar-sticky" aria-expanded="false">
+                            <span className="sr-only">Open main menu</span>
+                            <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1h15M1 7h15M1 13h15"/>
+                            </svg>
+                        </button>
+                        <Link to='/auth' className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center text-xl">Login</Link>
+                    </div>
+                    <div className={`items-center justify-between ${isMenuOpen? 'block' : 'hidden'} w-full md:flex md:w-auto md:order-1`} id="navbar-sticky">
+                        <ul className="flex flex-col p-2 md:p-0 font-medium rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
+                        <li>
+                            <Link to='' className="block py-2 md:py-0 px-3 text-white rounded hover:bg-blue-700 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 text-xl" aria-current="page">Home</Link>
+                        </li>
+                        <li>
+                            <Link to='/rules' className="block py-2 md:py-0 px-3 text-white rounded hover:bg-blue-700 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 text-xl">Rules</Link>
+                        </li>
+                        <li>
+                            <Link to='/booking' className="block py-2 md:py-0 px-3 text-white rounded hover:bg-blue-700 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 text-xl">Booking</Link>
+                        </li>
+                        <li>
+                            <Link to='/complaints' className="block py-2 md:py-0 px-3 text-white rounded hover:bg-blue-700 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 text-xl">Complaints</Link>
+                        </li>
+                        <li>
+                            <Link to='/contact' className="block py-2 md:py-0 px-3 text-white rounded hover:bg-blue-700 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 text-xl">Contact</Link>
+                        </li>
                         </ul>
                     </div>
-                </div>
-            </nav>
-        </div>
+                    </div>
+                </nav>
+            </div>
         </>
     )
 }

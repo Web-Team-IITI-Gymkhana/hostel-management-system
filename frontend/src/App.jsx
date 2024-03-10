@@ -15,11 +15,11 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/Auth" element={<Auth />} />
-          <Route path="/Rules" element={<Rules />} />
-          <Route path="/Booking" element={<Booking />} />
-          <Route path="/Complaints" element={<Complaints />} />
-          <Route path="/Contact" element={<Contact />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/rules" element={<Rules />} />
+          <Route path="/booking" element={<Booking />} />
+          <Route path="/complaints" element={<Complaints />} />
+          <Route path="/contact" element={<Contact />} />
         </Routes>
       </div>
     </Router>
