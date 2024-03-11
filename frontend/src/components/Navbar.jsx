@@ -38,19 +38,19 @@ function Navbar() {
                     <div className={`items-center justify-between ${isMenuOpen? 'block' : 'hidden'} w-full md:flex md:w-auto md:order-1`} id="navbar-sticky">
                         <ul className="flex flex-col p-2 md:p-0 font-medium rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
                         <li>
-                            <Link to='' className="block py-2 md:py-0 px-3 text-white rounded hover:bg-blue-700 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 text-xl" aria-current="page">Home</Link>
+                            <Link onClick={() => setMenuOpen(false)} to='' className="block py-2 md:py-0 px-3 text-white rounded hover:bg-blue-700 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 text-xl" aria-current="page">Home</Link>
                         </li>
                         <li>
-                            <Link to='/rules' className="block py-2 md:py-0 px-3 text-white rounded hover:bg-blue-700 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 text-xl">Rules</Link>
+                            <Link onClick={() => setMenuOpen(false)} to='/rules' className="block py-2 md:py-0 px-3 text-white rounded hover:bg-blue-700 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 text-xl">Rules</Link>
                         </li>
                         <li>
-                            <Link to='/booking' className="block py-2 md:py-0 px-3 text-white rounded hover:bg-blue-700 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 text-xl">Booking</Link>
+                            <Link onClick={() => setMenuOpen(false)} to='/booking' className="block py-2 md:py-0 px-3 text-white rounded hover:bg-blue-700 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 text-xl">Booking</Link>
                         </li>
                         <li>
-                            <Link to='/complaints' className="block py-2 md:py-0 px-3 text-white rounded hover:bg-blue-700 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 text-xl">Complaints</Link>
+                            <Link onClick={() => setMenuOpen(false)} to='/complaints' className="block py-2 md:py-0 px-3 text-white rounded hover:bg-blue-700 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 text-xl">Complaints</Link>
                         </li>
                         <li>
-                            <Link to='/contact' className="block py-2 md:py-0 px-3 text-white rounded hover:bg-blue-700 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 text-xl">Contact</Link>
+                            <Link onClick={() => setMenuOpen(false)} to='/contact' className="block py-2 md:py-0 px-3 text-white rounded hover:bg-blue-700 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 text-xl">Contact</Link>
                         </li>
                         </ul>
                     </div>

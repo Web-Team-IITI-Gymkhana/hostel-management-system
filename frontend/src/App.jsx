@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation} from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 import Auth from './components/Auth';
@@ -9,9 +9,16 @@ import Complaints from './components/Complaints';
 import Contact from './components/Contact';
 
 function App() {
+  // const location = useLocation();
+  // const [showNavbar, setShowNavbar] = useState(!['/auth'].includes(location.pathname));
+
+  // useEffect(() => {
+  //   setShowNavbar(!['/auth'].includes(location.pathname));
+  // }, [location.pathname]);
   return (
     <Router>
       <div>
+        {/* {showNavbar && <Navbar />} */}
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
