@@ -1,7 +1,10 @@
+import AuthContext from '../context/AuthContext.jsx';
 import React from 'react'
-import { useState } from 'react'
+import { useState,useContext } from 'react'
+import { Link } from "react-router-dom"
 
 function Auth() {
+    let {login,register} = useContext(AuthContext)
     const [signIn, setSignIn] = useState(true);
     const toggleSignIn = () => {
         setSignIn(!signIn);
@@ -13,7 +16,7 @@ function Auth() {
             { signIn ?
                 <div
                     className="bg-white shadow-md border border-gray-200 rounded-lg max-w-sm p-4 sm:p-6 lg:p-8">
-                    <form className="space-y-6" action="#">
+                    <form className="space-y-6" onSubmit={login}>
                         <h3 className="text-xl font-medium text-gray-900 text-center">Sign In to IITI Hostel</h3>
                         <div>
                             <label htmlFor="email" className="text-sm font-medium text-gray-900 block mb-2">Your email</label>
@@ -49,7 +52,7 @@ function Auth() {
                 :
                 <div
                     className="bg-white shadow-md border border-gray-200 rounded-lg max-w-sm p-4 sm:p-6 lg:p-8">
-                    <form className="space-y-6" action="#">
+                    <form className="space-y-6" onSubmit={register}>
                         <h3 className="text-xl font-medium text-gray-900 text-center">Sign Up to IITI Hostel</h3>
                         <div>
                             <label htmlFor="email" className="text-sm font-medium text-gray-900 block mb-2">Your email</label>
@@ -57,19 +60,19 @@ function Auth() {
                         </div>
                         <div>
                             <label htmlFor="text" className="text-sm font-medium text-gray-900 block mb-2">First Name</label>
-                            <input type="fname" name="fname" id="fname" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Jane" required=""/>
+                            <input type="text" name="fname" id="fname" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Jane" required=""/>
                         </div>
                         <div>
                             <label htmlFor="text" className="text-sm font-medium text-gray-900 block mb-2">Last Name</label>
-                            <input type="lname" name="lname" id="lname" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Doe" required=""/>
+                            <input type="text" name="lname" id="lname" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Doe" required=""/>
                         </div>
                         <div>
                             <label htmlFor="password" className="text-sm font-medium text-gray-900 block mb-2">Password</label>
-                            <input type="password1" name="password1" id="password1" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required=""/>
+                            <input type="password" name="password1" id="password1" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required=""/>
                         </div>
                         <div>
                             <label htmlFor="password" className="text-sm font-medium text-gray-900 block mb-2">Password (again):</label>
-                            <input type="password2" name="password2" id="password2" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required=""/>
+                            <input type="password" name="password2" id="password2" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required=""/>
                         </div>
                         <div className="flex items-start">
                             <div className="flex items-start">
