@@ -7,6 +7,7 @@ import Rules from './components/Rules';
 import Booking from './components/Booking';
 import Complaints from './components/Complaints';
 import Contact from './components/Contact';
+import {AuthProvider} from './context/AuthContext'
 
 function App() {
   // const location = useLocation();
@@ -17,18 +18,20 @@ function App() {
   // }, [location.pathname]);
   return (
     <Router>
-      <div>
-        {/* {showNavbar && <Navbar />} */}
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/rules" element={<Rules />} />
-          <Route path="/booking" element={<Booking />} />
-          <Route path="/complaints" element={<Complaints />} />
-          <Route path="/contact" element={<Contact />} />
-        </Routes>
-      </div>
+      <AuthProvider>
+        <div>
+          {/* {showNavbar && <Navbar />} */}
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/rules" element={<Rules />} />
+            <Route path="/booking" element={<Booking />} />
+            <Route path="/complaints" element={<Complaints />} />
+            <Route path="/contact" element={<Contact />} />
+          </Routes>
+        </div>
+      </AuthProvider>
     </Router>
   );
 }

@@ -2,16 +2,18 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import AuthContext from '../context/AuthContext.jsx';
 import '../css/Navbar.css';
 import logo from '../images/Indian_Institute_of_Technology,_Indore_Logo.png';
-import { useState } from 'react';
+import { useState,useContext } from 'react';
 
 function Navbar() {
+    let {user,logout} = useContext(AuthContext)
     const [isMenuOpen, setMenuOpen] = useState(false);
     const toggleMenu = () => {
         setMenuOpen(!isMenuOpen);
         console.log("clicked")
-    };
+    }; 
     return (
         <>
             <div className="logo bg-white py-2 px-0 mx-md-3 mx-0 container-md">
@@ -33,7 +35,8 @@ function Navbar() {
                                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1h15M1 7h15M1 13h15"/>
                             </svg>
                         </button>
-                        <Link to='/auth' className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center text-xl">Login</Link>
+                        {user===null ? <Link to='/auth' className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-4 py-2 text-center text-xl">Login</Link>
+                        : <button onClick={logout} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-4 py-2 text-center text-xl">Logout</button>}
                     </div>
                     <div className={`items-center justify-between ${isMenuOpen? 'block' : 'hidden'} w-full md:flex md:w-auto md:order-1`} id="navbar-sticky">
                         <ul className="flex flex-col p-2 md:p-0 font-medium rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">

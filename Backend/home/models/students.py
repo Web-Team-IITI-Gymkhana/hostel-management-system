@@ -1,20 +1,13 @@
 from django.db import models
 from django.utils.translation import gettext as _
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 class Student(models.Model):
     """
     Stores Student Details
     """
-
-    name = models.CharField(
-        _("Name of Student"),
-        max_length=50,
-        help_text="This contains the name of the Student",
-        null=True,
-        default="",
-        blank=True,
-    )
-    email = models.CharField(max_length=50, default="")
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     roll_no = models.CharField(
         _("Roll number of Student"),
         max_length=10,
@@ -57,8 +50,7 @@ class Student(models.Model):
     )
 
     def __str__(self):
-        return str(self.email)
-
+        return str(self.id)
     class Meta:
         verbose_name = "Student Details"
         verbose_name_plural = "Student Details"
