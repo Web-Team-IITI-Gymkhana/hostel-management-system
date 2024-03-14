@@ -6,6 +6,9 @@ from home.models import (Student,Hostel,Unit,Room,Due)
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 from .serializers import *
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+from dj_rest_auth.registration.views import SocialLoginView
 # Create your views here.
 
 User = get_user_model()
@@ -79,3 +82,8 @@ class Register(CreateAPIView):
 class UserDeleteView(DestroyAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
+
+class GoogleLogin(SocialLoginView): # if you want to use Authorization Code Grant, use this
+    adapter_class = GoogleOAuth2Adapter
+    callback_url = "http://localhost:5173"
+    client_class = OAuth2Client

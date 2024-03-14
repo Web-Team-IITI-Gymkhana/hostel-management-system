@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import toast from "react-hot-toast";
 import axios from "axios";
+import Cookies from "js-cookie";
+import { GoogleOAuthProvider } from 'google-oauth-gsi';
 const AuthContext = createContext();
 export default AuthContext;
 
@@ -29,7 +31,6 @@ export const AuthProvider = ({ children }) => {
     password:e.target.password1.value
     }).then((response)=>{
       console.log(response.data)
-      login(e)
     }).catch((error)=>{
       console.log(error)
       toast.error("Wrong Credentials");})
@@ -93,6 +94,39 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     }
   };
+  let googleProvider = new GoogleOAuthProvider({
+		clientId: "274154908788-75p7ln73ne1ktchhbbg9sjgttqklp50t.apps.googleusercontent.com",
+		onScriptLoadError: () => console.log('onScriptLoadError'),
+		onScriptLoadSuccess: () => console.log('onScriptLoadSuccess'),
+	});
+  let googleLogin = googleProvider.useGoogleLogin({
+		scope: 'profile email openid',
+		flow: 'auth-code',
+		onSuccess: (res) => {
+			
+			const code = res.code;
+			axios.post('http://127.0.0.1:8000/google/', { code: code }).then((response) => {
+				setAuth({ access: response.data.access, refresh: response.data.refresh })
+				Cookies.set('auth', JSON.stringify({ access: response.data.access, refresh: response.data.refresh }), { expires: 365, path: "/" })
+				Cookies.set('user', JSON.stringify({ username: response.data.user.username, email: response.data.user.email, id: response.data.user.pk }), { expires: 365, path: "/" })
+				setUser({ username: response.data.user.username, email: response.data.user.email, id: response.data.user.pk })
+				navigate("/");
+				toast.success("Logged In");
+			}).catch((err) => {
+        console.log(err)
+				if(err.response.data && err.response.data.non_field_errors[0] === "User is already registered with this e-mail address.") {
+					toast.error('User is Already Registered Using Basic Registration');
+					return 
+				}
+				
+				toast.error("Some Error Occured")
+				
+			}
+			)
+		},
+		onError: (err) => console.error('Failed to login with google', err),
+	});
+
   const ContextData = {
     register: register,
     user: user,
@@ -100,6 +134,7 @@ export const AuthProvider = ({ children }) => {
     logout: logout,
     auth: auth,
     deleteAccount: deleteAccount,
+    googleLogin : googleLogin,
   };
   useEffect(() => {
     if (loading) {
