@@ -11,13 +11,13 @@ export default AuthContext;
 // eslint-disable-next-line react/prop-types
 export const AuthProvider = ({ children }) => {
   let [user, setUser] = useState(() =>
-    localStorage.getItem("authTokens")
-      ? jwtDecode(localStorage.getItem("authTokens"))
+      Cookies.get('auth')
+      ?JSON.parse(Cookies.get('user'))
       : null
   );
   let [auth, setAuth] = useState(() =>
-    localStorage.getItem("authTokens")
-      ? JSON.parse(localStorage.getItem("authTokens"))
+      Cookies.get('auth')
+      ? JSON.parse(Cookies.get('auth'))
       : null
   );
   let [loading, setLoading] = useState(true);
@@ -42,9 +42,12 @@ export const AuthProvider = ({ children }) => {
     email:e.target.email.value,
     password:e.target.password.value
     }).then((response)=>{
-      setAuth(response.data);
-      setUser(jwtDecode(response.data.access));
-      localStorage.setItem("authTokens", JSON.stringify(response.data));
+      console.log(response)
+      setAuth({ access: response.data.access, refresh: response.data.refresh })
+      setUser(jwtDecode(response.data.access))
+      Cookies.set('auth', JSON.stringify({ access: response.data.access, refresh: response.data.refresh }), { expires: 365, path: "/" })
+      console.log(jwtDecode(response.data.access))
+      Cookies.set('user', JSON.stringify(jwtDecode(response.data.access)));
       toast.success("logged in Successfully!");
       navigate("/");
     }).catch((error)=>{
@@ -60,6 +63,8 @@ export const AuthProvider = ({ children }) => {
     setAuth(null);
     setUser(null);
     localStorage.clear();
+    Cookies.remove('auth')
+    Cookies.remove('user')
     navigate("/");
   };
 
@@ -83,9 +88,8 @@ export const AuthProvider = ({ children }) => {
     axios.post("http://127.0.0.1:8000/token/refresh/",{
       refresh: auth?.refresh
     }).then((response)=>{
-      setAuth(response.data);
-      setUser(jwtDecode(response.data.access));
-      localStorage.setItem("authTokens", JSON.stringify(response.data));
+      setAuth({ access: response.data.access, refresh: response.data.refresh })
+      Cookies.set('auth', JSON.stringify({ access: response.data.access, refresh: response.data.refresh }), { expires: 365, path: "/" })
     }).catch((error)=>{
       logout()
       console.log(error)
@@ -106,10 +110,11 @@ export const AuthProvider = ({ children }) => {
 			
 			const code = res.code;
 			axios.post('http://127.0.0.1:8000/google/', { code: code }).then((response) => {
+        console.log(response.data)
 				setAuth({ access: response.data.access, refresh: response.data.refresh })
 				Cookies.set('auth', JSON.stringify({ access: response.data.access, refresh: response.data.refresh }), { expires: 365, path: "/" })
-				Cookies.set('user', JSON.stringify({ username: response.data.user.username, email: response.data.user.email, id: response.data.user.pk }), { expires: 365, path: "/" })
-				setUser({ username: response.data.user.username, email: response.data.user.email, id: response.data.user.pk })
+				Cookies.set('user', JSON.stringify({ username: `${response.data.user.first_name} ${response.data.user.last_name}`, email: response.data.user.email, id: response.data.user.pk }), { expires: 365, path: "/" })
+				setUser({ username: `${response.data.user.first_name} ${response.data.user.last_name}`, email: response.data.user.email, id: response.data.user.pk })
 				navigate("/");
 				toast.success("Logged In");
 			}).catch((err) => {
