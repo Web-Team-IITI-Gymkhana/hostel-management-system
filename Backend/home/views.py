@@ -9,11 +9,13 @@ from .serializers import *
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from dj_rest_auth.registration.views import SocialLoginView
+from rest_framework.throttling import UserRateThrottle
 # Create your views here.
 
 User = get_user_model()
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    throttle_classes = [UserRateThrottle]
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
@@ -23,6 +25,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         return token
 
 class MytokenObtainPairView(TokenObtainPairView):
+    throttle_classes = [UserRateThrottle]
     serializer_class = MyTokenObtainPairSerializer
 
 class Students(ListCreateAPIView):
@@ -34,6 +37,7 @@ class Rooms(ListCreateAPIView):
     serializer_class = RoomSerializer
 
 class Register(CreateAPIView):
+    throttle_classes = [UserRateThrottle]
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
 

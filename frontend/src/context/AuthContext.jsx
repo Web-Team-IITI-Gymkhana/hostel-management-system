@@ -21,6 +21,7 @@ export const AuthProvider = ({ children }) => {
       : null
   );
   let [loading, setLoading] = useState(true);
+  const [formLoading, setFormLoading] = useState(false);
   let navigate = useNavigate();
 
   let register = (e) => {
@@ -57,15 +58,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   let logout = () => {
-    if (user) {
+    if (user && auth) {
       toast.success("logged out!");
+      setAuth(null);
+      setUser(null);
+      localStorage.clear();
+      Cookies.remove('auth')
+      Cookies.remove('user')
+      navigate("/");
     }
-    setAuth(null);
-    setUser(null);
-    localStorage.clear();
-    Cookies.remove('auth')
-    Cookies.remove('user')
-    navigate("/");
   };
 
   let deleteAccount = () => {
@@ -107,7 +108,7 @@ export const AuthProvider = ({ children }) => {
 		scope: 'profile email openid',
 		flow: 'auth-code',
 		onSuccess: (res) => {
-			
+			setFormLoading(true)
 			const code = res.code;
 			axios.post('http://127.0.0.1:8000/google/', { code: code }).then((response) => {
         console.log(response.data)
@@ -117,15 +118,15 @@ export const AuthProvider = ({ children }) => {
 				setUser({ username: `${response.data.user.first_name} ${response.data.user.last_name}`, email: response.data.user.email, id: response.data.user.pk })
 				navigate("/");
 				toast.success("Logged In");
+        setFormLoading(false)
 			}).catch((err) => {
         console.log(err)
 				if(err.response.data && err.response.data.non_field_errors[0] === "User is already registered with this e-mail address.") {
 					toast.error('User is Already Registered Using Basic Registration');
 					return 
 				}
-				
 				toast.error("Some Error Occured")
-				
+				setFormLoading(false)
 			}
 			)
 		},
@@ -140,6 +141,8 @@ export const AuthProvider = ({ children }) => {
     auth: auth,
     deleteAccount: deleteAccount,
     googleLogin : googleLogin,
+    formLoading: formLoading,
+    setFormLoading: setFormLoading,
   };
   useEffect(() => {
     if (loading) {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import AuthContext from '../context/AuthContext.jsx';
@@ -8,12 +8,20 @@ import logo from '../images/Indian_Institute_of_Technology,_Indore_Logo.png';
 import { useState,useContext } from 'react';
 
 function Navbar() {
+    const navigate = useNavigate();
     let {user,logout} = useContext(AuthContext)
     const [isMenuOpen, setMenuOpen] = useState(false);
     const toggleMenu = () => {
         setMenuOpen(!isMenuOpen);
         console.log("clicked")
     }; 
+    const handleClick = () => {
+        // Close the menu when clicking on the link
+        setMenuOpen(false);
+        
+        // Navigate to the '/profile' route
+        navigate('/profile');
+      };
     return (
         <>
             <div className="logo bg-white py-2 px-0 mx-md-3 mx-0 container-md">
@@ -55,6 +63,10 @@ function Navbar() {
                         <li>
                             <Link onClick={() => setMenuOpen(false)} to='/contact' className="block py-2 md:py-0 px-3 text-white rounded hover:bg-blue-700 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 text-xl">Contact</Link>
                         </li>
+                        { user&&
+                        <li>
+                            <Link  to='/profile' className="block py-2 md:py-0 px-3 text-white rounded hover:bg-blue-700 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 text-xl">Profile</Link>
+                        </li>}
                         </ul>
                     </div>
                     </div>

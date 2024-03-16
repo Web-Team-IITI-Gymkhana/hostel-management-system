@@ -4,18 +4,19 @@ import { useState,useContext } from 'react'
 import { Link } from "react-router-dom"
 
 function Auth() {
-    let {login,register,googleLogin} = useContext(AuthContext)
+    let {login,register,googleLogin,formLoading} = useContext(AuthContext)
     const [signIn, setSignIn] = useState(true);
     const toggleSignIn = () => {
         setSignIn(!signIn);
         console.log("clicked")
     };
+
     return (
         <>
-            <div className="mx-auto border border-black flex justify-center p-5">
+            <div className="mx-auto flex justify-center p-5">
             { signIn ?
                 <div
-                    className="bg-white shadow-md border border-gray-200 rounded-lg max-w-sm p-4 sm:p-6 lg:p-8">
+                    className="bg-white shadow-md border border-gray-200 rounded-lg w-[350px] max-w-screen p-4 sm:p-6 lg:p-8">
                     <form className="space-y-6" onSubmit={login}>
                         <h3 className="text-xl font-medium text-gray-900 text-center">Sign In to IITI Hostel</h3>
                         <div>
@@ -38,20 +39,19 @@ function Auth() {
                                 <a href="#" className="text-sm text-blue-700 hover:underline ml-auto">Lost
                                     Password?</a>
                         </div>
-                        <button type="submit" className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Login to your account</button>
-                        <button onClick={googleLogin} className="inline-flex h-10 w-full items-center justify-center gap-2 rounded border border-slate-300 bg-white p-2 text-sm font-medium text-black outline-none focus:ring-2 focus:ring-[#333] focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60">
-                            <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="h-[18px] w-[18px] "/>Continue with
-                            Google
-                        </button>
+                        <button type="submit" className="inline-flex h-10 items-center justify-center w-full gap-2 rounded border text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 text-center my-2">Sign In</button>
+                    </form>
+                    <button onClick={googleLogin} className="inline-flex h-10 w-full items-center justify-center gap-2 rounded border border-slate-300 bg-white p-2 text-sm font-medium text-black outline-none focus:ring-2 focus:ring-[#333] focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60 my-2">
+                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="h-[18px] w-[18px] "/>{formLoading ? "Loading.." : "Continue with Google"}
+                    </button>
                         <div className="text-sm font-medium text-gray-500">
                             Not registered? <a onClick={toggleSignIn} className="text-blue-700 hover:underline">Create
                                 account</a>
                         </div>
-                    </form>
                 </div>
                 :
                 <div
-                    className="bg-white shadow-md border border-gray-200 rounded-lg max-w-sm p-4 sm:p-6 lg:p-8">
+                    className="bg-white shadow-md border border-gray-200 rounded-lg w-[350px] max-w-screen p-4 sm:p-6 lg:p-8">
                     <form className="space-y-6" onSubmit={register}>
                         <h3 className="text-xl font-medium text-gray-900 text-center">Sign Up to IITI Hostel</h3>
                         <div>
@@ -86,15 +86,15 @@ function Auth() {
                                 <a href="#" className="text-sm text-blue-700 hover:underline ml-auto">Lost
                                     Password?</a>
                         </div>
-                        <button type="submit" className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Sign Up</button>
-                        <button onClick={googleLogin} className="inline-flex h-10 w-full items-center justify-center gap-2 rounded border border-slate-300 bg-white p-2 text-sm font-medium text-black outline-none focus:ring-2 focus:ring-[#333] focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60">
+                        <button type="submit" className="inline-flex h-10 items-center justify-center w-full gap-2 rounded border text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 text-center my-2">Sign Up</button>
+                    </form>
+                        <button onClick={googleLogin} className="inline-flex h-10 w-full items-center justify-center gap-2 rounded border border-slate-300 bg-white p-2 text-sm font-medium text-black outline-none focus:ring-2 focus:ring-[#333] focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60 my-2">
                             <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="h-[18px] w-[18px] "/>Continue with
                             Google
                         </button>
                         <div className="text-sm font-medium text-gray-500">
                             Already Have an account? <a onClick={toggleSignIn} className="text-blue-700 hover:underline">Sign In</a>
                         </div>
-                    </form>
                 </div>
             }
             </div>
