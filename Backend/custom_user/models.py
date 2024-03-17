@@ -16,7 +16,7 @@ class User(AbstractUser):
     )
     email = models.EmailField(max_length=225,unique=True)
     email_is_verified = models.BooleanField(null=True,default=False,blank=True)
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES)
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES,default='STUDENT')
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
