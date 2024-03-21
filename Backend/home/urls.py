@@ -12,5 +12,7 @@ urlpatterns = [
     path('dj-rest-auth/', include('dj_rest_auth.urls')),
     path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
     path('google/', GoogleLogin.as_view(), name='google_login'),
+    path('student/<str:email>/', StudentByEmail.as_view()),
+
     # path(r'^accounts/', include('allauth.urls'), name='socialaccount_signup'),
 ]

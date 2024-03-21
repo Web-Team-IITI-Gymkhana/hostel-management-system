@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework.generics import ListCreateAPIView,CreateAPIView,DestroyAPIView
+from rest_framework.generics import ListCreateAPIView,CreateAPIView,DestroyAPIView,RetrieveUpdateDestroyAPIView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from home.models import (Student,Hostel,Unit,Room,Due)
@@ -10,6 +10,7 @@ from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from dj_rest_auth.registration.views import SocialLoginView
 from rest_framework.throttling import UserRateThrottle
+from django.shortcuts import get_object_or_404
 # Create your views here.
 
 User = get_user_model()
@@ -31,6 +32,16 @@ class MytokenObtainPairView(TokenObtainPairView):
 class Students(ListCreateAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
+
+class StudentByEmail(RetrieveUpdateDestroyAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+    def get_object(self):
+        email = self.kwargs['email']
+        user = get_object_or_404(User, email=email)
+        student = get_object_or_404(Student, user=user)
+        return student
 
 class Rooms(ListCreateAPIView):
     queryset = Room.objects.all()

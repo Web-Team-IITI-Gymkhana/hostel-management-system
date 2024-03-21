@@ -9,6 +9,7 @@ import Complaints from './pages/Complaints';
 import Contact from './components/Contact';
 import Profile from './pages/profile';
 import {AuthProvider} from './context/AuthContext'
+import { ProfileProvider } from './context/ProfileContext';
 
 function App() {
   // const location = useLocation();
@@ -23,6 +24,7 @@ function App() {
         <div>
           {/* {showNavbar && <Navbar />} */}
           <Navbar />
+            <ProfileProvider>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/auth" element={<Auth />} />
@@ -30,8 +32,9 @@ function App() {
             <Route path="/booking" element={<Booking />} />
             <Route path="/complaints" element={<Complaints />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/profile" element={<Profile />} /> {/* Route to the Profile page */}
+              <Route path="/profile" element={<Profile />} /> {/* Route to the Profile page */}
           </Routes>
+            </ProfileProvider>
         </div>
       </AuthProvider>
     </Router>

@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import toast from "react-hot-toast";
@@ -65,6 +65,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.clear();
       Cookies.remove('auth')
       Cookies.remove('user')
+      Cookies.remove('student')
       navigate("/");
     }
   };
