@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import AuthContext from '../context/AuthContext.jsx';
@@ -8,7 +8,6 @@ import logo from '../images/Indian_Institute_of_Technology,_Indore_Logo.png';
 import { useState, useContext } from 'react';
 import 'flowbite';
 function Navbar() {
-    const navigate = useNavigate();
     let { user, logout } = useContext(AuthContext)
     const [isMenuOpen, setMenuOpen] = useState(false);
     const toggleMenu = () => {
@@ -33,7 +32,7 @@ function Navbar() {
                 </a>
             </div>
             <div className="navigation">
-                <nav className="bg-[rgb(18, 37, 106)] w-full z-20 h-14">
+                <nav className="bg-[rgb(18, 37, 106)] w-full z-20 h-16">
                     <div className="flex flex-wrap justify-between px-5 mx-auto items-start">
                         <div className="flex py-2 lg:order-2 space-x-3 lg:space-x-0 w-screen justify-between lg:w-max">
                             <button onClick={toggleDropdown} data-collapse-toggle="navbar-sticky" type="button" className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-white rounded-lg lg:hidden hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-800" aria-controls="navbar-sticky" aria-expanded="false">

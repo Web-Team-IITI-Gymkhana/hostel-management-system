@@ -13,7 +13,7 @@ function Profile() {
   return (
     <>
 <div className='flex flex-wrap'>
-        <div className='w-[360px] h-[400px] mx-3 my-3 rounded-lg p-6 border '>
+        <div className='w-[360px] h-[400px] mx-3 my-3 rounded-lg p-6 border-2 border-gray-500'>
           <p className='font-bold h-10'>Your Profile</p>
           <div className="inline-flex items-center justify-center w-20 h-20 overflow-hidden bg-orange-500 rounded-full">
             <span className="font-extrabold text-gray-600 dark:text-gray-300">CK</span>

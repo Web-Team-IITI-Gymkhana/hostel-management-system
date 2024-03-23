@@ -49,8 +49,8 @@ export const AuthProvider = ({ children }) => {
       setUser(jwtDecode(response.data.access))
       Cookies.set('auth', JSON.stringify({ access: response.data.access, refresh: response.data.refresh }), { expires: 365, path: "/" })
       Cookies.set('user', JSON.stringify(jwtDecode(response.data.access)));
-      console.log(response.data)
-      toast.success(response.data.detail)
+      console.log(response)
+      toast.success("Logged in Successfully")
       navigate("/");
     }).catch((error)=>{
         console.log(error.response.data)
