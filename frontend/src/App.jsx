@@ -67,6 +67,7 @@ function App() {
             </ProfileProvider>
         </div>
       </AuthProvider>
+      
     </Router>
   );
 }

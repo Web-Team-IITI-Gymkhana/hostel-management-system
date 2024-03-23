@@ -45,9 +45,9 @@ class HostelSerializer(ModelSerializer):
         model = Hostel
         fields = '__all__'
 class DueSerializer(ModelSerializer):
-    Student = StudentSerializer(many = False)
+    Student = StudentSerializer(many = True ,read_only=True)
     class Meta:
-        model = Hostel
+        model = Due
         fields = '__all__'
 
 class VerifyOTPSerializer(serializers.ModelSerializer):
