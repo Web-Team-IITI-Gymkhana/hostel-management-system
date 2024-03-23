@@ -1,6 +1,4 @@
-from django.shortcuts import render
 from rest_framework.generics import ListCreateAPIView,CreateAPIView,DestroyAPIView,RetrieveUpdateDestroyAPIView
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from home.models import (Student,Hostel,Unit,Room,Due)
 from rest_framework.response import Response
@@ -14,16 +12,6 @@ from django.shortcuts import get_object_or_404
 # Create your views here.
 
 User = get_user_model()
-
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    throttle_classes = [UserRateThrottle]
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-        token['id'] = user.id
-        token['email'] = user.email
-        token['username'] = user.username 
-        return token
 
 class MytokenObtainPairView(TokenObtainPairView):
     throttle_classes = [UserRateThrottle]

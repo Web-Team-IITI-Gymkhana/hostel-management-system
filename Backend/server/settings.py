@@ -90,7 +90,10 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_RATES': {
         'anon': '30/minute',  # 10 requests per minute for anonymous users
         'user': '30/minute',  # 10 requests per minute per user
-    }
+    },
+    'DEFAULT_SERIALIZER_CLASSES': (
+        'server.home.serializers.CustomTokenSerializer',  # Specify the custom token serializer here
+    ),
 }
 
 
@@ -103,7 +106,7 @@ ROOT_URLCONF = 'server.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -160,6 +163,12 @@ USE_I18N = True
 
 USE_TZ = True
 
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "trishanttalluri@gmail.com"
+EMAIL_HOST_PASSWORD = "btjoexzeqkefndqz"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
@@ -244,7 +253,7 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-ACCOUNT_AUTHENTICATION_METHOD ='username_email'
+ACCOUNT_AUTHENTICATION_METHOD ='email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True

@@ -26,35 +26,36 @@ export const AuthProvider = ({ children }) => {
 
   let register = (e) => {
     e.preventDefault();
-    axios.post("http://127.0.0.1:8000/register/",{
+    axios.post("http://127.0.0.1:8000/dj-rest-auth/registration/",{
     username:e.target.fname.value + e.target.lname.value,
     email:e.target.email.value,
-    password:e.target.password1.value
-    }).then((response)=>{
-      console.log(response.data)
+    password1:e.target.password1.value,
+    password2:e.target.password2.value
+  }).then((response)=>{
+      toast.success(response.data.detail)
     }).catch((error)=>{
-      console.log(error)
-      toast.error("Wrong Credentials");})
+      error.response.data.non_field_errors ?
+      toast.error(error.response.data.non_field_errors)
+      : toast.error("Error Occured")})
   };
 
   let login = (e) => {
     e.preventDefault();
     axios.post("http://127.0.0.1:8000/token/",{
-    email:e.target.email.value,
-    password:e.target.password.value
+      email:e.target.email.value,
+      password:e.target.password.value
     }).then((response)=>{
-      console.log(response)
       setAuth({ access: response.data.access, refresh: response.data.refresh })
       setUser(jwtDecode(response.data.access))
       Cookies.set('auth', JSON.stringify({ access: response.data.access, refresh: response.data.refresh }), { expires: 365, path: "/" })
-      console.log(jwtDecode(response.data.access))
       Cookies.set('user', JSON.stringify(jwtDecode(response.data.access)));
-      toast.success("logged in Successfully!");
+      console.log(response.data)
+      toast.success(response.data.detail)
       navigate("/");
     }).catch((error)=>{
-      console.log(error)
-      toast.error("Wrong Credentials");
-    })
+        console.log(error.response.data)
+        toast.error(error.response.data.non_field_errors)
+    });
   };
 
   let logout = () => {
@@ -101,7 +102,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
   let googleProvider = new GoogleOAuthProvider({
-		clientId: "274154908788-75p7ln73ne1ktchhbbg9sjgttqklp50t.apps.googleusercontent.com",
+		clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
 		onScriptLoadError: () => console.log('onScriptLoadError'),
 		onScriptLoadSuccess: () => console.log('onScriptLoadSuccess'),
 	});
@@ -146,12 +147,13 @@ export const AuthProvider = ({ children }) => {
     setFormLoading: setFormLoading,
   };
   useEffect(() => {
-    if (loading) {
+    if (loading && auth) {
       updateToken();
     }
     let interval = setInterval(() => {
       if (auth) {
         updateToken();
+        console.log(auth)
       }
     }, 1000 * 60 * 4);
     return () => clearInterval(interval);

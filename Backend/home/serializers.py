@@ -1,10 +1,21 @@
 from rest_framework.serializers import ModelSerializer
 from home.models import (Student,Hostel,Unit,Room,Due)
-
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from rest_framework.throttling import UserRateThrottle
 
 User = get_user_model()
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    throttle_classes = [UserRateThrottle]
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['id'] = user.id
+        token['email'] = user.email
+        token['username'] = user.username 
+        return token
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -38,3 +49,9 @@ class DueSerializer(ModelSerializer):
     class Meta:
         model = Hostel
         fields = '__all__'
+
+class VerifyOTPSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("email_is_verified","otp","email")
+

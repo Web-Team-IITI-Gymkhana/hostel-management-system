@@ -18,6 +18,6 @@ class User(AbstractUser):
     email_is_verified = models.BooleanField(null=True,default=False,blank=True)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES,default='STUDENT')
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    REQUIRED_FIELDS = []
 
 
