@@ -18,7 +18,7 @@ function Student() {
     <>
     <div className='w-[360px] h-64 rounded-lg p-6 border '>
        <p className='font-bold'>{student_room?.furniture}</p>
-       <p className='font-bold'>{student_due?.student_due}</p>
+       <p className='font-bold'>{student_due?.remaining_Due}</p>
     </div>
     <div className='w-[360px] h-64 rounded-lg p-6 border '>
 

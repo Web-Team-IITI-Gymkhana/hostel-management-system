@@ -47,8 +47,8 @@ export const ProfileProvider = ({ children }) => {
   };
   let getStudentDue = () => {
     axios.get("http://127.0.0.1:8000/student_due/" + user.email).then((response) => {
-      setDue({ student_due: response.data.Remaining_Due })
-      Cookies.set('student_due', JSON.stringify({ student_due: response.data.Remaining_Due}), { expires: 365, path: "/" })
+      setDue({ remaining_Due: response.data.Remaining_Due })
+      Cookies.set('student_due', JSON.stringify({ remaining_Due: response.data.Remaining_Due}), { expires: 365, path: "/" })
     }).catch((error) => {
       console.log(error)
     })
