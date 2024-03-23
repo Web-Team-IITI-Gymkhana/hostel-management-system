@@ -1,14 +1,15 @@
 from django.db import models
 from django.utils.translation import gettext as _
 from .students import Student
+from .furnitures import Furniture
 
 class Room(models.Model):
-    FURNITURE_CHOICES = [
-        ('bed', 'Bed'),
-        ('desk', 'Desk'),
-        ('chair', 'Chair'),
-        ('wardrobe', 'Wardrobe'),
-    ]
+    # FURNITURE_CHOICES = [
+    #     ('bed', 'Bed'),
+    #     ('desk', 'Desk'),
+    #     ('chair', 'Chair'),
+    #     ('wardrobe', 'Wardrobe'),
+    # ]
     Room_ID = models.CharField(
         _("Alphabet of room"),
         max_length=1,)
@@ -16,10 +17,9 @@ class Room(models.Model):
         Student, 
         null=True,
         on_delete=models.SET_NULL)
-    furniture = models.CharField(
-        _("Available furniture"),
-        max_length=50, 
-        choices=FURNITURE_CHOICES, 
+    furniture = models.ManyToManyField(
+        Furniture, 
+        verbose_name=_("Available furniture"), 
         blank=True)
     is_Occupied = models.BooleanField(
         default=False,)
@@ -28,11 +28,15 @@ class Room(models.Model):
         return f"Room {self.Room_ID}"
 
     def get_furniture_list(self):
-        return self.furniture.split(',') if self.furniture else []
+        return list(self.furniture.all())
 
-    def is_furniture_present(self, furniture_type):
-        return furniture_type in self.get_furniture_list()
-    
-#EXAMPLE:
-# room1 = Room(room_ID='101', furniture='bed,desk,chair')
+    def is_furniture_present(self, furniture_name):
+        return self.furniture.filter(name=furniture_name).exists()
+
+# EXAMPLE:
+# room1 = Room(Room_ID='101', is_Occupied=True)
 # room1.save()
+# bed = Furniture.objects.create(name='Bed')
+# desk = Furniture.objects.create(name='Desk')
+# chair = Furniture.objects.create(name='Chair')
+# room1.furniture.add(bed, desk, chair)

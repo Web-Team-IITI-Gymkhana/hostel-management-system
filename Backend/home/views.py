@@ -31,6 +31,28 @@ class StudentByEmail(RetrieveUpdateDestroyAPIView):
         student = get_object_or_404(Student, user=user)
         return student
 
+class StudentRoomByEmail(RetrieveUpdateDestroyAPIView):
+    queryset = Room.objects.all()
+    serializer_class = RoomSerializer
+    def get_object(self):
+        email = self.kwargs['email']
+        user = get_object_or_404(User, email=email)
+        student = get_object_or_404(Student, user=user)
+        room = get_object_or_404(Room,students = student)
+        print(room)
+        return room
+
+
+class StudentDueByEmail(RetrieveUpdateDestroyAPIView):
+    queryset = Due.objects.all()
+    serializer_class = DueSerializer
+    def get_object(self):
+        email = self.kwargs['email']
+        user = get_object_or_404(User, email=email)
+        student = get_object_or_404(Student, user=user)
+        due = get_object_or_404(Due,students = student)
+        return due
+
 class Rooms(ListCreateAPIView):
     queryset = Room.objects.all()
     serializer_class = RoomSerializer

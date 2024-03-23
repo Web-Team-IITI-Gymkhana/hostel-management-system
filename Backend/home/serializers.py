@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from home.models import (Student,Hostel,Unit,Room,Due)
+from home.models import (Student,Hostel,Unit,Room,Due, Furniture)
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
@@ -27,11 +27,39 @@ class StudentSerializer(serializers.ModelSerializer):
         model = Student
         fields = ('id', 'user', 'roll_no', 'department', 'degree', 'hostel', 'room_no')
 
-class RoomSerializer(ModelSerializer):
-    Student = StudentSerializer(many = True ,read_only=True)
+class FurnitureSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Furniture
+        fields = ['id', 'name']
+
+class RoomSerializer(serializers.ModelSerializer):
+    furniture = FurnitureSerializer(many=True)
+
     class Meta:
         model = Room
-        fields = '__all__'
+        fields = ['id', 'Room_ID', 'students', 'furniture', 'is_Occupied']
+
+    def create(self, validated_data):
+        furniture_data = validated_data.pop('furniture')
+        room = Room.objects.create(**validated_data)
+        for furniture_item in furniture_data:
+            furniture, _ = Furniture.objects.get_or_create(**furniture_item)
+            room.furniture.add(furniture)
+        return room
+
+    def update(self, instance, validated_data):
+        instance.Room_ID = validated_data.get('Room_ID', instance.Room_ID)
+        instance.students = validated_data.get('students', instance.students)
+        instance.is_Occupied = validated_data.get('is_Occupied', instance.is_Occupied)
+
+        furniture_data = validated_data.get('furniture', [])
+        instance.furniture.clear()
+        for furniture_item in furniture_data:
+            furniture, _ = Furniture.objects.get_or_create(**furniture_item)
+            instance.furniture.add(furniture)
+
+        instance.save()
+        return instance
 
 class UnitSerializer(ModelSerializer):
     Room = RoomSerializer(many = True)
@@ -45,9 +73,9 @@ class HostelSerializer(ModelSerializer):
         model = Hostel
         fields = '__all__'
 class DueSerializer(ModelSerializer):
-    Student = StudentSerializer(many = False)
+    Student = StudentSerializer(many = True ,read_only=True)
     class Meta:
-        model = Hostel
+        model = Due
         fields = '__all__'
 
 class VerifyOTPSerializer(serializers.ModelSerializer):
