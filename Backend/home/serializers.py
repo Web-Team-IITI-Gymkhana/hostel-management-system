@@ -83,3 +83,10 @@ class VerifyOTPSerializer(serializers.ModelSerializer):
         model = User
         fields = ("email_is_verified","otp","email")
 
+class StudentDataSerializer(serializers.Serializer):
+    student = StudentSerializer()
+    room = RoomSerializer()
+    due = DueSerializer()
+
+
+

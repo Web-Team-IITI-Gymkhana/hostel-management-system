@@ -109,6 +109,8 @@ class GoogleLogin(SocialLoginView): # if you want to use Authorization Code Gran
     callback_url = "http://localhost:5173"
     client_class = OAuth2Client
 class StudentDataByEmail(RetrieveUpdateDestroyAPIView):
+    serializer_class = StudentDataSerializer
+
     def get(self, request, *args, **kwargs):
         email = kwargs.get('email')
         if email:
@@ -117,13 +119,11 @@ class StudentDataByEmail(RetrieveUpdateDestroyAPIView):
             room = get_object_or_404(Room, students=student)
             due = get_object_or_404(Due, students=student)
 
-            student_serializer = StudentSerializer(student)
-            room_serializer = RoomSerializer(room)
-            due_serializer = DueSerializer(due)
-            return JsonResponse({
-                'student': student_serializer.data,
-                'room': room_serializer.data,
-                'due': due_serializer.data,
+            serializer = self.get_serializer({
+                'student': student,
+                'room': room,
+                'due': due,
             })
+            return JsonResponse(serializer.data)
         else:
             return JsonResponse({'error': 'Email parameter is required'}, status=400)
