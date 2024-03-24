@@ -9,6 +9,8 @@ from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from dj_rest_auth.registration.views import SocialLoginView
 from rest_framework.throttling import UserRateThrottle
 from django.shortcuts import get_object_or_404
+from django.views import View
+from django.http import JsonResponse
 # Create your views here.
 
 User = get_user_model()
@@ -17,45 +19,37 @@ class MytokenObtainPairView(TokenObtainPairView):
     throttle_classes = [UserRateThrottle]
     serializer_class = MyTokenObtainPairSerializer
 
-class Students(ListCreateAPIView):
-    queryset = Student.objects.all()
-    serializer_class = StudentSerializer
+# class StudentByEmail(RetrieveUpdateDestroyAPIView):
+#     queryset = Student.objects.all()
+#     serializer_class = StudentSerializer
 
-class StudentByEmail(RetrieveUpdateDestroyAPIView):
-    queryset = Student.objects.all()
-    serializer_class = StudentSerializer
+#     def get_object(self):
+#         email = self.kwargs['email']
+#         user = get_object_or_404(User, email=email)
+#         student = get_object_or_404(Student, user=user)
+#         return student
 
-    def get_object(self):
-        email = self.kwargs['email']
-        user = get_object_or_404(User, email=email)
-        student = get_object_or_404(Student, user=user)
-        return student
-
-class StudentRoomByEmail(RetrieveUpdateDestroyAPIView):
-    queryset = Room.objects.all()
-    serializer_class = RoomSerializer
-    def get_object(self):
-        email = self.kwargs['email']
-        user = get_object_or_404(User, email=email)
-        student = get_object_or_404(Student, user=user)
-        room = get_object_or_404(Room,students = student)
-        print(room)
-        return room
+# class StudentRoomByEmail(RetrieveUpdateDestroyAPIView):
+#     queryset = Room.objects.all()
+#     serializer_class = RoomSerializer
+#     def get_object(self):
+#         email = self.kwargs['email']
+#         user = get_object_or_404(User, email=email)
+#         student = get_object_or_404(Student, user=user)
+#         room = get_object_or_404(Room,students = student)
+#         print(room)
+#         return room
 
 
-class StudentDueByEmail(RetrieveUpdateDestroyAPIView):
-    queryset = Due.objects.all()
-    serializer_class = DueSerializer
-    def get_object(self):
-        email = self.kwargs['email']
-        user = get_object_or_404(User, email=email)
-        student = get_object_or_404(Student, user=user)
-        due = get_object_or_404(Due,students = student)
-        return due
-
-class Rooms(ListCreateAPIView):
-    queryset = Room.objects.all()
-    serializer_class = RoomSerializer
+# class StudentDueByEmail(RetrieveUpdateDestroyAPIView):
+#     queryset = Due.objects.all()
+#     serializer_class = DueSerializer
+#     def get_object(self):
+#         email = self.kwargs['email']
+#         user = get_object_or_404(User, email=email)
+#         student = get_object_or_404(Student, user=user)
+#         due = get_object_or_404(Due,students = student)
+#         return due
 
 class Register(CreateAPIView):
     throttle_classes = [UserRateThrottle]
@@ -114,3 +108,22 @@ class GoogleLogin(SocialLoginView): # if you want to use Authorization Code Gran
     adapter_class = GoogleOAuth2Adapter
     callback_url = "http://localhost:5173"
     client_class = OAuth2Client
+class StudentDataByEmail(RetrieveUpdateDestroyAPIView):
+    def get(self, request, *args, **kwargs):
+        email = kwargs.get('email')
+        if email:
+            user = get_object_or_404(User, email=email)
+            student = get_object_or_404(Student, user=user)
+            room = get_object_or_404(Room, students=student)
+            due = get_object_or_404(Due, students=student)
+
+            student_serializer = StudentSerializer(student)
+            room_serializer = RoomSerializer(room)
+            due_serializer = DueSerializer(due)
+            return JsonResponse({
+                'student': student_serializer.data,
+                'room': room_serializer.data,
+                'due': due_serializer.data,
+            })
+        else:
+            return JsonResponse({'error': 'Email parameter is required'}, status=400)
