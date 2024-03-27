@@ -1,22 +1,27 @@
 from django.db import models
 from django.utils.translation import gettext as _
 from .rooms import Room
+from .complaints import Complaint
+from .furnitures import Furniture
 
 
 class Unit(models.Model):
-    FURNITURE_CHOICES = [
-        ('2-seater-sofa', '2-Seater-Sofa'),
-        ('table', 'Table'),
-        ('1-seater-sofa', '1-Seater-Sofa'),
-    ]
+    # FURNITURE_CHOICES = [
+    #     ('2-seater-sofa', '2-Seater-Sofa'),
+    #     ('table', 'Table'),
+    #     ('1-seater-sofa', '1-Seater-Sofa'),
+    # ]
     Unit_number = models.PositiveIntegerField()
-    furniture = models.CharField(
-        _("Available furniture"),
-        max_length=50, 
-        choices=FURNITURE_CHOICES, 
+    furniture = models.ManyToManyField(
+        Furniture, 
+        verbose_name=_("Available furniture"), 
         blank=True)
     rooms = models.ManyToManyField(
         Room)
+    unit_complaints = models.ManyToManyField(
+        Complaint,
+        verbose_name=_("Unit Specific Complaints"), 
+        null=True)
 
     def __str__(self):
         return f"Unit {self.Unit_number}"

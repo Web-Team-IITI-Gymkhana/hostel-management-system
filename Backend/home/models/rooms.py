@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import gettext as _
 from .students import Student
 from .furnitures import Furniture
+from .complaints import Complaint
 
 class Room(models.Model):
     # FURNITURE_CHOICES = [
@@ -23,6 +24,10 @@ class Room(models.Model):
         blank=True)
     is_Occupied = models.BooleanField(
         default=False,)
+    room_complaints = models.ManyToManyField(
+        Complaint,
+        verbose_name=_("Room Specific Complaints"), 
+        null=True)
     
     def __str__(self):
         return f"Room {self.Room_ID}"

@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from home.models import (Student,Hostel,Unit,Room,Due, Furniture)
+from home.models import (Student,Hostel,Unit,Room,Due, Furniture, Complaint)
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
@@ -88,5 +88,8 @@ class StudentDataSerializer(serializers.Serializer):
     room = RoomSerializer()
     due = DueSerializer()
 
-
+class ComplaintSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Complaint
+        fields = '__all__'
 
