@@ -1,8 +1,17 @@
-import React from 'react';
 import Student from '../components/Student';
 import PersonalDetails from '../components/PersonalDetails';
 import ProfileComplains from '../components/ProfileComplains';
+import ProfileContext from '../context/ProfileContext';
+import { useContext, useEffect, useState } from 'react';
 function Profile() {
+  let [loading, setLoading] = useState(true);
+  const { getStudentData } = useContext(ProfileContext);
+  useEffect(() => {
+    if(loading){
+      getStudentData();
+      setLoading(!loading);
+    }
+  }, [getStudentData, setLoading, loading]);
   return (
     <>
       <div className='flex flex-col lg:grid lg:grid-cols-3'>

@@ -67,6 +67,8 @@ export const AuthProvider = ({ children }) => {
       Cookies.remove('auth')
       Cookies.remove('user')
       Cookies.remove('student')
+      Cookies.remove('room_detail')
+      Cookies.remove('student_due')
       navigate("/");
     }
   };

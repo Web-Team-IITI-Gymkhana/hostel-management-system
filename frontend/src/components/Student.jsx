@@ -1,15 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import ProfileContext from '../context/ProfileContext';
 function Student() {
-  const { getStudentData,student_room,student_due} = useContext(ProfileContext);
-  let [loading, setLoading] = useState(true);
-  useEffect(() => {
-    if(loading){
-      getStudentData();
-      setLoading(!loading);
-    }
-  }, [getStudentData, setLoading, loading]);
-
+  const { student_room,student_due} = useContext(ProfileContext);
   return (
     <>
     <div className='w-full h-max rounded-lg p-4 border my-4 shadow-md hover:shadow-xl transition-all duration-300'>
