@@ -1,6 +1,6 @@
 from rest_framework.generics import ListCreateAPIView,CreateAPIView,DestroyAPIView,RetrieveUpdateDestroyAPIView
 from rest_framework_simplejwt.views import TokenObtainPairView
-from home.models import (Student,Hostel,Unit,Room,Due)
+from home.models import (Student,Hostel,Unit,Room,Due,Complaint)
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 from .serializers import *
@@ -118,11 +118,12 @@ class StudentDataByEmail(RetrieveUpdateDestroyAPIView):
             student = get_object_or_404(Student, user=user)
             room = get_object_or_404(Room, students=student)
             due = get_object_or_404(Due, students=student)
-
+            complaints = room.room_complaints.all()
             serializer = self.get_serializer({
                 'student': student,
                 'room': room,
                 'due': due,
+                "complaint":complaints
             })
             return JsonResponse(serializer.data)
         else:

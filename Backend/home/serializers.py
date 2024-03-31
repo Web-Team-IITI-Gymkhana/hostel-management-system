@@ -37,7 +37,7 @@ class RoomSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Room
-        fields = ['id', 'Room_ID', 'students', 'furniture', 'is_Occupied']
+        fields = ['id', 'Room_ID', 'students', 'furniture', 'is_Occupied', 'room_complaints']
 
     def create(self, validated_data):
         furniture_data = validated_data.pop('furniture')
@@ -83,13 +83,15 @@ class VerifyOTPSerializer(serializers.ModelSerializer):
         model = User
         fields = ("email_is_verified","otp","email")
 
-class StudentDataSerializer(serializers.Serializer):
-    student = StudentSerializer()
-    room = RoomSerializer()
-    due = DueSerializer()
-
 class ComplaintSerializer(serializers.ModelSerializer):
     class Meta:
         model = Complaint
         fields = '__all__'
+class StudentDataSerializer(serializers.Serializer):
+    student = StudentSerializer()
+    room = RoomSerializer()
+    due = DueSerializer()
+    complaint = ComplaintSerializer(many=True)
+
+
 
