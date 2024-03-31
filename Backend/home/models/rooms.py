@@ -26,8 +26,8 @@ class Room(models.Model):
         default=False,)
     room_complaints = models.ManyToManyField(
         Complaint,
-        verbose_name=_("Room Specific Complaints"), 
-        null=True)
+        verbose_name=_("Room Specific Complaints"),
+        blank=True,)
     
     def __str__(self):
         return f"Room {self.Room_ID}"

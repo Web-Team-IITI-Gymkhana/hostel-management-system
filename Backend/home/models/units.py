@@ -20,8 +20,8 @@ class Unit(models.Model):
         Room)
     unit_complaints = models.ManyToManyField(
         Complaint,
-        verbose_name=_("Unit Specific Complaints"), 
-        null=True)
+        verbose_name=_("Unit Specific Complaints"),
+        blank=True)
 
     def __str__(self):
         return f"Unit {self.Unit_number}"

@@ -11,6 +11,7 @@ from rest_framework.throttling import UserRateThrottle
 from django.shortcuts import get_object_or_404
 from django.views import View
 from django.http import JsonResponse
+
 # Create your views here.
 
 User = get_user_model()
@@ -18,39 +19,6 @@ User = get_user_model()
 class MytokenObtainPairView(TokenObtainPairView):
     throttle_classes = [UserRateThrottle]
     serializer_class = MyTokenObtainPairSerializer
-
-# class StudentByEmail(RetrieveUpdateDestroyAPIView):
-#     queryset = Student.objects.all()
-#     serializer_class = StudentSerializer
-
-#     def get_object(self):
-#         email = self.kwargs['email']
-#         user = get_object_or_404(User, email=email)
-#         student = get_object_or_404(Student, user=user)
-#         return student
-
-# class StudentRoomByEmail(RetrieveUpdateDestroyAPIView):
-#     queryset = Room.objects.all()
-#     serializer_class = RoomSerializer
-#     def get_object(self):
-#         email = self.kwargs['email']
-#         user = get_object_or_404(User, email=email)
-#         student = get_object_or_404(Student, user=user)
-#         room = get_object_or_404(Room,students = student)
-#         print(room)
-#         return room
-
-
-# class StudentDueByEmail(RetrieveUpdateDestroyAPIView):
-#     queryset = Due.objects.all()
-#     serializer_class = DueSerializer
-#     def get_object(self):
-#         email = self.kwargs['email']
-#         user = get_object_or_404(User, email=email)
-#         student = get_object_or_404(Student, user=user)
-#         due = get_object_or_404(Due,students = student)
-#         return due
-
 class Register(CreateAPIView):
     throttle_classes = [UserRateThrottle]
     queryset = Student.objects.all()
@@ -108,6 +76,7 @@ class GoogleLogin(SocialLoginView): # if you want to use Authorization Code Gran
     adapter_class = GoogleOAuth2Adapter
     callback_url = "http://localhost:5173"
     client_class = OAuth2Client
+
 class StudentDataByEmail(RetrieveUpdateDestroyAPIView):
     serializer_class = StudentDataSerializer
 
@@ -128,3 +97,50 @@ class StudentDataByEmail(RetrieveUpdateDestroyAPIView):
             return JsonResponse(serializer.data)
         else:
             return JsonResponse({'error': 'Email parameter is required'}, status=400)
+        
+class WardenDataByEmail(RetrieveUpdateDestroyAPIView):
+    serializer_class = WardenDataSerializer
+
+    def get(self, request, *args, **kwargs):
+        email = kwargs.get('email')
+        if email:
+            user = get_object_or_404(User, email=email)
+            student = get_object_or_404(Student, user=user)
+            print(student.hostel, student.room_no)
+            if user.role == 'WARDEN':
+                hostel = get_object_or_404(Hostel, hostel_code=student.hostel)
+                total_capacity = 0
+                students_registered = 0
+                rooms_is_occupied = 0
+                total_complaints = 0
+                complaints_resolved = 0
+                furniture_counts = {}
+                for unit in hostel.units.all():
+                    for complaint in unit.unit_complaints.all():
+                        total_complaints += 1
+                        if complaint.is_resolved:
+                            complaints_resolved += 1
+                    for room in unit.rooms.all():
+                        if room.students.user.role == 'STUDENT':
+                            students_registered += 1
+                        total_capacity += 1
+                        if room.is_Occupied:
+                            rooms_is_occupied += 1
+                        for furniture_item in room.furniture.all():
+                            furniture_counts[furniture_item.name] = furniture_counts.get(furniture_item.name, 0) + 1
+                serialized_student = StudentSerializer(student).data
+                return JsonResponse({
+                    'total_capacity': total_capacity,
+                    'registered_students':students_registered,
+                    'rooms_is_occupied': rooms_is_occupied,
+                    'furniture_counts': furniture_counts,
+                    'total_complaints': total_complaints,
+                    'complaints_resolved': complaints_resolved,
+                    'student': serialized_student,
+                })
+            else:
+                return JsonResponse({'error': 'User is not a warden'}, status=400)
+        else:
+            return JsonResponse({'error': 'Email parameter is required'}, status=400)
+        
+

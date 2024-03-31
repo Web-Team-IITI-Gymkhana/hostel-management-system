@@ -14,5 +14,6 @@ urlpatterns = [
     # path('student_room/<str:email>/', StudentRoomByEmail.as_view()),
     # path('student_due/<str:email>/', StudentDueByEmail.as_view()),
     # path('profile_photo/', ProfilePhotoView.as_view(), name='profile_photo'),
-    path('student_data/<str:email>/', StudentDataByEmail.as_view()) 
+    path('student_data/<str:email>/', StudentDataByEmail.as_view()),
+    path('warden_data/<str:email>/', WardenDataByEmail.as_view()), 
 ]

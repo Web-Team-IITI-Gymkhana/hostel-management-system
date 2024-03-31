@@ -15,7 +15,16 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['id'] = user.id
         token['email'] = user.email
         token['username'] = user.username 
+        token['role'] = user.role
         return token
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        # Add custom user data to the response
+        data['id'] = self.user.id
+        data['email'] = self.user.email
+        data['username'] = self.user.username 
+        data['role'] = self.user.role
+        return data
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -92,6 +101,11 @@ class StudentDataSerializer(serializers.Serializer):
     room = RoomSerializer()
     due = DueSerializer()
     complaint = ComplaintSerializer(many=True)
+class WardenDataSerializer(serializers.Serializer):
+    student = StudentSerializer()
+    room = RoomSerializer()
+    due = DueSerializer()
+    complaint = ComplaintSerializer()
 
 
 
