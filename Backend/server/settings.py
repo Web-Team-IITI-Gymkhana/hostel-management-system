@@ -40,6 +40,7 @@ REST_USE_JWT = True
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'custom_user',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -78,6 +79,12 @@ MIDDLEWARE = [
 ]
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+JAZZMIN_SETTINGS = {
+    "topmenu_links": [
+            {"name": "Home",  "url": "admin:index", "permissions": ["auth.view_user"]},
+        ],
+    }
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

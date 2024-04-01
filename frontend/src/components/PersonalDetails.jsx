@@ -34,12 +34,12 @@ export default function PersonalDetails() {
             </div>
             :
             <div>
-                {student.hostel &&
+                {student?.hostel &&
                     <div>
                         <span className='text-xl font-medium'>Hostel : </span><span>{student?.hostel}</span>
                     </div>
                 }
-                {student.room_no &&
+                {student?.room_no &&
                     <div>
                         <span className='text-xl font-medium'>Room : </span><span>{student?.room_no?.slice(0,3) + " " + student?.room_no?.slice(3,4)}</span>
                     </div>

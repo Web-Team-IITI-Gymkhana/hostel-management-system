@@ -4,6 +4,7 @@ import ProfileComplains from '../components/ProfileComplains';
 import ProfileContext from '../context/ProfileContext';
 import AuthContext from '../context/AuthContext';
 import HostelStats from '../components/HostelStats';
+import SwapStudentRoom from '../components/SwapStudentRoom';
 import { useContext, useEffect, useState } from 'react';
 
 function Profile() {
@@ -54,6 +55,7 @@ function Profile() {
               <HostelStats/>
             </div>
           </div>
+          <SwapStudentRoom/>
         </div>
       }
     </>
