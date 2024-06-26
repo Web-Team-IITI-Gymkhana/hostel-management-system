@@ -6,6 +6,7 @@ import AuthContext from '../context/AuthContext';
 import HostelStats from '../components/HostelStats';
 import SwapStudentRoom from '../components/SwapStudentRoom';
 import { useContext, useEffect, useState } from 'react';
+import Actions from '../components/Actions';
 
 function Profile() {
   const { user } = useContext(AuthContext);
@@ -55,7 +56,9 @@ function Profile() {
               <HostelStats/>
             </div>
           </div>
-          <SwapStudentRoom/>
+          <div className='m-4 border rounded-md shadow-md hover:shadow-xl transition-all duration-300'>
+          <Actions/>
+          </div>
         </div>
       }
     </>

@@ -8,6 +8,12 @@ import { GoogleOAuthProvider } from 'google-oauth-gsi';
 const AuthContext = createContext();
 export default AuthContext;
 
+let googleProvider = new GoogleOAuthProvider({
+  clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+  onScriptLoadError: () => console.log('Google OAuth script load error'),
+  onScriptLoadSuccess: () => console.log('Google OAuth script loaded successfully'),
+});
+
 // eslint-disable-next-line react/prop-types
 export const AuthProvider = ({ children }) => {
   let [user, setUser] = useState(() =>
@@ -71,6 +77,8 @@ export const AuthProvider = ({ children }) => {
       Cookies.remove('student_due')
       Cookies.remove('room_complaints')
       Cookies.remove('hostelStats')
+      Cookies.remove('swapStudentData1')
+      Cookies.remove('swapStudentData2')
       navigate("/");
     }
   };
@@ -105,39 +113,37 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     }
   };
-  let googleProvider = new GoogleOAuthProvider({
-		clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
-		onScriptLoadError: () => console.log('onScriptLoadError'),
-		onScriptLoadSuccess: () => console.log('onScriptLoadSuccess'),
-	});
+
   let googleLogin = googleProvider.useGoogleLogin({
-		scope: 'profile email openid',
-		flow: 'auth-code',
-		onSuccess: (res) => {
-			setFormLoading(true)
-			const code = res.code;
-			axios.post('http://127.0.0.1:8000/google/', { code: code }).then((response) => {
-        console.log(response.data)
-				setAuth({ access: response.data.access, refresh: response.data.refresh })
-				Cookies.set('auth', JSON.stringify({ access: response.data.access, refresh: response.data.refresh }), { expires: 365, path: "/" })
-				Cookies.set('user', JSON.stringify({ username: `${response.data.user.first_name} ${response.data.user.last_name}`, email: response.data.user.email, id: response.data.user.pk }), { expires: 365, path: "/" })
-				setUser({ username: `${response.data.user.first_name} ${response.data.user.last_name}`, email: response.data.user.email, id: response.data.user.pk })
-				navigate("/");
-				toast.success("Logged In");
-        setFormLoading(false)
-			}).catch((err) => {
-        console.log(err)
-				if(err.response.data && err.response.data.non_field_errors[0] === "User is already registered with this e-mail address.") {
-					toast.error('User is Already Registered Using Basic Registration');
-					return 
-				}
-				toast.error("Some Error Occured")
-				setFormLoading(false)
-			}
-			)
-		},
-		onError: (err) => console.error('Failed to login with google', err),
-	});
+    scope: 'profile email openid',
+    flow: 'auth-code',
+    onSuccess: (res) => {
+      setFormLoading(true);
+      const code = res.code;
+      axios.post('http://127.0.0.1:8000/google/', { code: code })
+        .then((response) => {
+          console.log(response.data);
+          setAuth({ access: response.data.access, refresh: response.data.refresh });
+          Cookies.set('auth', JSON.stringify({ access: response.data.access, refresh: response.data.refresh }), { expires: 365, path: "/" });
+          Cookies.set('user', JSON.stringify({ username: `${response.data.user.first_name} ${response.data.user.last_name}`, email: response.data.user.email, id: response.data.user.pk }), { expires: 365, path: "/" });
+          setUser({ username: `${response.data.user.first_name} ${response.data.user.last_name}`, email: response.data.user.email, id: response.data.user.pk });
+          navigate("/");
+          toast.success("Logged In");
+          setFormLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          if (err.response && err.response.data && err.response.data.non_field_errors && err.response.data.non_field_errors[0] === "User is already registered with this e-mail address.") {
+            toast.error('User is Already Registered Using Basic Registration');
+          } else {
+            toast.error("Some Error Occurred");
+          }
+          setFormLoading(false);
+        });
+    },
+    onError: (err) => console.error('Failed to login with google', err),
+  });
+  
 
   const ContextData = {
     register: register,

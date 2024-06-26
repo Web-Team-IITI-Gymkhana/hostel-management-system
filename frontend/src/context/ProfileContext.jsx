@@ -2,6 +2,7 @@ import { createContext, useState, useContext } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import AuthContext from "./AuthContext";
+import toast from "react-hot-toast";
 const ProfileContext = createContext();
 export default ProfileContext;
 
@@ -11,6 +12,12 @@ export const ProfileProvider = ({ children }) => {
 
   let [student, setStudent] = useState(() =>
     Cookies.get("student") ? JSON.parse(Cookies.get("student")) : null
+  );
+  let [swapStudentData1, setSwapStudentData1] = useState(() =>
+    Cookies.get("swapStudentData1") ? JSON.parse(Cookies.get("swapStudentData1")) : null
+  );
+  let [swapStudentData2, setSwapStudentData2] = useState(() =>
+    Cookies.get("swapStudentData1") ? JSON.parse(Cookies.get("swapStudentData1")) : null
   );
   let [room, setRoom] = useState(() =>
     Cookies.get("room_detail") ? JSON.parse(Cookies.get("room_detail")) : null
@@ -120,6 +127,83 @@ export const ProfileProvider = ({ children }) => {
       console.log(error)
     })
   }
+  let getSwapStudentsData = (e) =>{
+    e.preventDefault();
+    const Email1 = e.target.email1.value
+    const Email2 = e.target.email2.value
+    axios
+      .get("http://127.0.0.1:8000/student_data/" + Email1 + "/")
+      .then((response) => {
+        setSwapStudentData1({
+          email : Email1,
+          hostel: response.data.student.hostel,
+          roll_no: response.data.student.roll_no,
+          room_no: response.data.student.room_no,
+        });
+        Cookies.set(
+          "swapStudentData1",
+          JSON.stringify({
+            email : Email1,
+            hostel: response.data.student.hostel,
+            roll_no: response.data.student.roll_no,
+            room_no: response.data.student.room_no,
+          }),
+          { expires: 365, path: "/" }
+        );
+      }).catch((error) => {
+          console.log(error);
+        });
+
+
+        axios
+      .get("http://127.0.0.1:8000/student_data/" + Email2 + "/")
+      .then((response) => {
+        setSwapStudentData2({
+          email : Email2,
+          hostel: response.data.student.hostel,
+          roll_no: response.data.student.roll_no,
+          room_no: response.data.student.room_no,
+        });
+        Cookies.set(
+          "swapStudentData2",
+          JSON.stringify({
+            email : Email2,
+            hostel: response.data.student.hostel,
+            roll_no: response.data.student.roll_no,
+            room_no: response.data.student.room_no,
+          }),
+          { expires: 365, path: "/" }
+        );
+      }).catch((error) => {
+          console.log(error);
+        });
+  }
+
+  let confirmSwap = () =>{
+    if(swapStudentData1==null || swapStudentData2==null){
+      toast.error('2 Email IDs missing');
+    }
+    else if(swapStudentData1.email==swapStudentData2.email){
+      toast.error("Same student data");
+    }
+    else{
+      axios.post("http://127.0.0.1:8000/swap-student-rooms/",{
+        email1:swapStudentData1.email,
+        email2:swapStudentData2.email,
+      }).then((response)=>{
+        toast.success(response.data.detail);
+        // setSwapStudentData1(null)
+        // setSwapStudentData2(null)
+        // Cookies.remove('swapStudentData1')
+        // Cookies.remove('swapStudentData2')
+      }).catch((error)=>{
+        error.response.data.non_field_errors ?
+        toast.error(error.response.data.non_field_errors)
+        : toast.error("Error Occured")
+      })
+      
+    }
+  }
 
   let contextData = {
     getStudentData,
@@ -129,6 +213,12 @@ export const ProfileProvider = ({ children }) => {
     student_room: room,
     student_due: due,
     room_complaints: complaints,
+    getSwapStudentsData : getSwapStudentsData,
+    swapStudentData1:swapStudentData1,
+    swapStudentData2:swapStudentData2,
+    setSwapStudentData1:setSwapStudentData1,
+    setSwapStudentData2:setSwapStudentData2,
+    confirmSwap:confirmSwap,
   };
 
   return (

@@ -143,4 +143,30 @@ class WardenDataByEmail(RetrieveUpdateDestroyAPIView):
         else:
             return JsonResponse({'error': 'Email parameter is required'}, status=400)
         
+class SwapStudentData(RetrieveUpdateDestroyAPIView):
+    serializer_class = StudentDataSerializer
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        Email1 = data['email1']
+        Email2 = data['email2']
+        user1 = get_object_or_404(User, email=Email1)
+        user2 = get_object_or_404(User, email=Email2)
+        
+        student1 = get_object_or_404(Student, user=user1)
+        student2 = get_object_or_404(Student, user=user2)
+        
+        room1 = get_object_or_404(Room, students=student1)
+        room2 = get_object_or_404(Room, students=student2)
 
+        #Swap students in rooms
+        room1.students = student2
+        room2.students = student1
+        room1.save()
+        room2.save()
+        string1 = student1.room_no
+        string2 = student2.room_no
+        student1.room_no = string2
+        student2.room_no = string1
+        student1.save()
+        student2.save()
+        return Response({"detail": "Students swapped successfully."}, status=200)
