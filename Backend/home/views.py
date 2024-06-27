@@ -72,9 +72,9 @@ class UserDeleteView(DestroyAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
 
-class GoogleLogin(SocialLoginView): # if you want to use Authorization Code Grant, use this
+class GoogleLogin(SocialLoginView):
     adapter_class = GoogleOAuth2Adapter
-    callback_url = "http://localhost:5173"
+    callback_url = "http://localhost:5173"  # Replace with your actual callback URL
     client_class = OAuth2Client
 
 class StudentDataByEmail(RetrieveUpdateDestroyAPIView):

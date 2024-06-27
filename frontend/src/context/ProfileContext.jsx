@@ -19,6 +19,9 @@ export const ProfileProvider = ({ children }) => {
   let [swapStudentData2, setSwapStudentData2] = useState(() =>
     Cookies.get("swapStudentData1") ? JSON.parse(Cookies.get("swapStudentData1")) : null
   );
+  let [alotStudentData, setAlotStudentData] = useState(() =>
+    Cookies.get("alotStudentData") ? JSON.parse(Cookies.get("alotStudentData")) : null
+  );
   let [room, setRoom] = useState(() =>
     Cookies.get("room_detail") ? JSON.parse(Cookies.get("room_detail")) : null
   );
@@ -204,6 +207,32 @@ export const ProfileProvider = ({ children }) => {
       
     }
   }
+  let getAlotStudentData = (e) =>{
+    e.preventDefault();
+    const Email = e.target.email.value
+    axios
+      .get("http://127.0.0.1:8000/student_data/" + Email + "/")
+      .then((response) => {
+        setAlotStudentData({
+          email : Email,
+          hostel: response.data.student.hostel,
+          roll_no: response.data.student.roll_no,
+          room_no: response.data.student.room_no,
+        });
+        Cookies.set(
+          "alotStudentData",
+          JSON.stringify({
+            email : Email,
+            hostel: response.data.student.hostel,
+            roll_no: response.data.student.roll_no,
+            room_no: response.data.student.room_no,
+          }),
+          { expires: 365, path: "/" }
+        );
+      }).catch((error) => {
+          console.log(error);
+        });
+  }
 
   let contextData = {
     getStudentData,
@@ -219,6 +248,9 @@ export const ProfileProvider = ({ children }) => {
     setSwapStudentData1:setSwapStudentData1,
     setSwapStudentData2:setSwapStudentData2,
     confirmSwap:confirmSwap,
+    getAlotStudentData:getAlotStudentData,
+    setAlotStudentData:setAlotStudentData,
+    alotStudentData:alotStudentData,
   };
 
   return (

@@ -10,10 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
 import environ
 import os
-from datetime import timedelta
+import dj_database_url
 env = environ.Env()
 
 environ.Env.read_env()
@@ -139,6 +140,7 @@ DATABASES = {
     }
 }
 
+DATABASES['default'] = dj_database_url.parse(env('DATABASE_URL'))
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -197,7 +199,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(seconds=5),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,

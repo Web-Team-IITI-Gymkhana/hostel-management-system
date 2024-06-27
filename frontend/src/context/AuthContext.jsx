@@ -40,6 +40,7 @@ export const AuthProvider = ({ children }) => {
   }).then((response)=>{
       toast.success(response.data.detail)
     }).catch((error)=>{
+      console.log(error.response.data)
       error.response.data.non_field_errors ?
       toast.error(error.response.data.non_field_errors)
       : toast.error("Error Occured")})
@@ -120,6 +121,7 @@ export const AuthProvider = ({ children }) => {
     onSuccess: (res) => {
       setFormLoading(true);
       const code = res.code;
+      console.log(res)
       axios.post('http://127.0.0.1:8000/google/', { code: code })
         .then((response) => {
           console.log(response.data);
@@ -132,10 +134,10 @@ export const AuthProvider = ({ children }) => {
           setFormLoading(false);
         })
         .catch((err) => {
-          console.log(err);
           if (err.response && err.response.data && err.response.data.non_field_errors && err.response.data.non_field_errors[0] === "User is already registered with this e-mail address.") {
             toast.error('User is Already Registered Using Basic Registration');
           } else {
+            console.log(err)
             toast.error("Some Error Occurred");
           }
           setFormLoading(false);

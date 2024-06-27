@@ -108,9 +108,13 @@ export default function SwapStudentRoom() {
                 }
             </div>
         </form>
+        {firstSwap ? 
         <div className='w-full flex justify-end'>
-        <div onClick={handleBack} className='w-min p-2 px-3 m-2 rounded-md hover:bg-green-400 hover:text-white border'>Back</div>
+            <div onClick={handleBack} className='w-min p-2 px-3 m-2 rounded-md hover:bg-green-400 hover:text-white border'>Back</div>
         </div>
+        :
+        <div></div>
+        }
         </div>
         }
 
