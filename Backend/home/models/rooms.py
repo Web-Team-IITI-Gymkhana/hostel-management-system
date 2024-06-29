@@ -17,6 +17,7 @@ class Room(models.Model):
     students = models.ForeignKey(
         Student, 
         null=True,
+        blank=True,
         on_delete=models.SET_NULL)
     furniture = models.ManyToManyField(
         Furniture, 

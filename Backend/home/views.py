@@ -84,6 +84,7 @@ class StudentDataByEmail(RetrieveUpdateDestroyAPIView):
         email = kwargs.get('email')
         if email:
             user = get_object_or_404(User, email=email)
+            print(user)
             student = get_object_or_404(Student, user=user)
             room = get_object_or_404(Room, students=student)
             due = get_object_or_404(Due, students=student)
@@ -106,7 +107,6 @@ class WardenDataByEmail(RetrieveUpdateDestroyAPIView):
         if email:
             user = get_object_or_404(User, email=email)
             student = get_object_or_404(Student, user=user)
-            print(student.hostel, student.room_no)
             if user.role == 'WARDEN':
                 hostel = get_object_or_404(Hostel, hostel_code=student.hostel)
                 total_capacity = 0
@@ -121,8 +121,9 @@ class WardenDataByEmail(RetrieveUpdateDestroyAPIView):
                         if complaint.is_resolved:
                             complaints_resolved += 1
                     for room in unit.rooms.all():
-                        if room.students.user.role == 'STUDENT':
-                            students_registered += 1
+                        if room.students:
+                            if room.students.user.role == 'STUDENT':
+                                students_registered += 1
                         total_capacity += 1
                         if room.is_Occupied:
                             rooms_is_occupied += 1
@@ -170,3 +171,57 @@ class SwapStudentData(RetrieveUpdateDestroyAPIView):
         student1.save()
         student2.save()
         return Response({"detail": "Students swapped successfully."}, status=200)
+    
+class getEmptyRooms(RetrieveUpdateDestroyAPIView):
+    serializer_class = WardenDataSerializer
+
+    def get(self, request, *args, **kwargs):
+        email = kwargs.get('email')
+        if email:
+            user = get_object_or_404(User, email=email)
+            student = get_object_or_404(Student, user=user)
+            if user.role == 'WARDEN':
+                hostel = get_object_or_404(Hostel, hostel_code=student.hostel)
+                EmptyUnits = {}
+                for unit in hostel.units.all():
+                    EmptyRooms = {}
+                    for room in unit.rooms.all():
+                        if room.students is None or room.is_Occupied is False:
+                            EmptyRooms[room.Room_ID] = "Empty"
+                    if EmptyRooms:
+                        EmptyUnits[unit.Unit_number] = EmptyRooms
+                return JsonResponse(EmptyUnits)
+            else:
+                return JsonResponse({'error': 'User is not a warden'}, status=400)
+        else:
+            return JsonResponse({'error': 'Email parameter is required'}, status=400)
+        
+class alotStudentAnEmptyRoom(RetrieveUpdateDestroyAPIView):
+        serializer_class = StudentDataSerializer
+
+        def post(self, request, *args, **kwargs):
+            data = request.data
+            email = data.get('email')
+            unitNumber = data.get('unit_no')
+            room = data.get('room')
+            if not email or not unitNumber or not room:
+                return Response({"detail": "Email, unit number, and room are required."}, status=400)
+            try:
+                user = get_object_or_404(User, email=email)
+                student = get_object_or_404(Student, user=user)
+                room1 = get_object_or_404(Room, students=student)
+                unit = get_object_or_404(Unit, Unit_number=unitNumber)
+                room2 = None
+                for Rooms in unit.rooms.all():
+                    if Rooms.Room_ID == room:
+                        room2 = Rooms
+            except:
+                return Response({"detail": "Invalid email, unit number, or room."}, status=400)
+            #Swap students in rooms
+            room1.students = None
+            room2.students = student
+            room1.save()
+            room2.save()
+            student.room_no = unitNumber+room #room_no is a string
+            student.save()
+            return Response({"detail": "Students swapped successfully."}, status=200)

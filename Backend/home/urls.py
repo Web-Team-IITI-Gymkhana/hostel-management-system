@@ -14,4 +14,6 @@ urlpatterns = [
     path('student_data/<str:email>/', StudentDataByEmail.as_view()),
     path('warden_data/<str:email>/', WardenDataByEmail.as_view()), 
     path('swap-student-rooms/', SwapStudentData.as_view()),
+    path('get_empty_rooms/<str:email>/', getEmptyRooms.as_view()),
+    path('alot_student_an_empty_room/', alotStudentAnEmptyRoom.as_view()),
 ]

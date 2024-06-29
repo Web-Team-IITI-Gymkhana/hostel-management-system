@@ -19,9 +19,6 @@ export const ProfileProvider = ({ children }) => {
   let [swapStudentData2, setSwapStudentData2] = useState(() =>
     Cookies.get("swapStudentData1") ? JSON.parse(Cookies.get("swapStudentData1")) : null
   );
-  let [alotStudentData, setAlotStudentData] = useState(() =>
-    Cookies.get("alotStudentData") ? JSON.parse(Cookies.get("alotStudentData")) : null
-  );
   let [room, setRoom] = useState(() =>
     Cookies.get("room_detail") ? JSON.parse(Cookies.get("room_detail")) : null
   );
@@ -195,10 +192,6 @@ export const ProfileProvider = ({ children }) => {
         email2:swapStudentData2.email,
       }).then((response)=>{
         toast.success(response.data.detail);
-        // setSwapStudentData1(null)
-        // setSwapStudentData2(null)
-        // Cookies.remove('swapStudentData1')
-        // Cookies.remove('swapStudentData2')
       }).catch((error)=>{
         error.response.data.non_field_errors ?
         toast.error(error.response.data.non_field_errors)
@@ -209,16 +202,11 @@ export const ProfileProvider = ({ children }) => {
   }
   let getAlotStudentData = (e) =>{
     e.preventDefault();
+    console.log(e.target.email.value)
     const Email = e.target.email.value
     axios
       .get("http://127.0.0.1:8000/student_data/" + Email + "/")
       .then((response) => {
-        setAlotStudentData({
-          email : Email,
-          hostel: response.data.student.hostel,
-          roll_no: response.data.student.roll_no,
-          room_no: response.data.student.room_no,
-        });
         Cookies.set(
           "alotStudentData",
           JSON.stringify({
@@ -232,6 +220,39 @@ export const ProfileProvider = ({ children }) => {
       }).catch((error) => {
           console.log(error);
         });
+  }
+
+  let getEmptyRooms = () =>{
+    axios
+    .get("http://127.0.0.1:8000/get_empty_rooms/" + user.email + "/")
+    .then((response)=>{
+      console.log(response.data)
+      Cookies.set(
+        "emptyRoomDetails",
+        JSON.stringify({
+          EmptyRoomDetails: response.data
+        }),
+        { expires: 365, path: "/" }
+      );
+    })
+    .catch((error)=>{
+      console.log(error)
+    })
+  }
+
+  let alotStudentToEmptyRoom = (selectedUnit, room, email) => {
+    console.log(selectedUnit, room, email);
+    axios.post('http://127.0.0.1:8000/alot_student_an_empty_room/',{
+      unit_no:selectedUnit,
+      room,
+      email
+    }).then((response)=>{
+      toast.success(response.data.detail);
+    }).catch((error)=>{
+      error.response.data.non_field_errors ?
+      toast.error(error.response.data.non_field_errors)
+      : toast.error("Error Occured")
+    })
   }
 
   let contextData = {
@@ -249,8 +270,8 @@ export const ProfileProvider = ({ children }) => {
     setSwapStudentData2:setSwapStudentData2,
     confirmSwap:confirmSwap,
     getAlotStudentData:getAlotStudentData,
-    setAlotStudentData:setAlotStudentData,
-    alotStudentData:alotStudentData,
+    getEmptyRooms:getEmptyRooms,
+    alotStudentToEmptyRoom:alotStudentToEmptyRoom,
   };
 
   return (
